@@ -1,0 +1,51 @@
+<link rel="import" href="bower_components/core-icon-button/core-icon-button.html">
+
+<polymer-element name="lessormobile-summarycard">
+  <template>
+    <style>
+      :host {
+        display: block;
+        
+        background-color: white;
+        padding: 20px;
+        
+        font-size: 1.2rem;
+        font-weight: 300;
+        margin-bottom: 30px;
+      }
+      .card-header {
+        margin-bottom: 10px;
+      }
+
+      .card-header ::content h2 {
+        margin: 0;
+        font-size: 1.8rem;
+        font-weight: 300;
+      }
+
+      :host([isThisWeek]){
+        background-color: rgb(200, 200, 255);
+      }
+    </style>
+
+    <div class="card-header" layout horizontal center>
+      <content select="h2"></content>
+    </div>
+    <content></content>
+
+  </template>
+  <script>
+  Polymer('lessormobile-summarycard', {
+    publish: {
+      favorite: {
+        value: false,
+        reflect: true
+      }
+    },
+    favoriteTapped: function(event, detail, sender) {
+      this.favorite = !this.favorite;
+      this.fire('favorite-tap');
+    }
+  });
+  </script>
+</polymer-element>

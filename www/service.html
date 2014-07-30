@@ -1,0 +1,150 @@
+<link rel="import" href="bower_components/core-ajax/core-ajax.html">
+<link rel="import" href="bower_components/paper-toast/paper-toast.html">
+
+<polymer-element name="lessor-service" attributes="weeks,summary">
+  <template>
+    <style>
+    
+    </style>
+
+    <core-ajax id="ajax"
+      auto
+      url="/request?module=integration&type=sheetsquery&sheet=1j9GkwpmQCel4NSoWPZlZkjlDBYJVL0JWuYsf5RCA6mE&query=SELECT *"
+      on-core-response="{{dataLoaded}}"
+      handleAs="json">
+    </core-ajax>
+
+    <paper-toast id="toastInvalidNumber" class="capsule" text="Ugyldig registrering" style="padding-right: 60px;"></paper-toast>
+    <paper-toast id="toastEnterSuccess" class="capsule" text="Registreringen blev gemt" style="padding-right: 60px;"></paper-toast>
+    <paper-toast id="toastEnterUnknownError" class="capsule" text="Der skete en ukendt fejl under registreringen" style="padding-right: 60px;"></paper-toast>
+    <paper-toast id="toastDayNotFound" class="capsule" text="Ikke muligt at registrere på denne dag" style="padding-right: 60px;"></paper-toast>
+  </template>
+  <script>
+  Polymer('lessor-service', {
+    created: function() {
+      this.weeks = [];
+      this.days = [];
+    },
+    dataLoaded: function() {
+      // Make a copy of the loaded data
+      var res = this.$.ajax.response.rows;
+      this.summary = {};
+
+      var weeks = [];
+      var days = [];
+      var week = {};
+      var foundToday = false;
+      
+      var today = new Date();
+      today.setHours(0,0,0,0)
+      var doBreak = false;
+
+      for(var i = 0; i < res.length; i++){
+        if(res[i].c[0] != null){
+          if(res[i].c[0].v.indexOf("Uge") >= 0){
+            if(week.title)
+              weeks.push(week);
+
+            var week = {
+              title: res[i].c[0].v,
+              days: [],
+              isThisWeek: false,
+              isBeforeThisWeek: !foundToday,
+            };
+          }
+
+          if(week.title){
+            if(res[i].c[0].v.substring(0, 2) == "20"){
+
+              var y = parseInt(res[i].c[0].v.substring(0, 4));
+              var m = parseInt(res[i].c[0].v.substring(4, 6));
+              var d = parseInt(res[i].c[0].v.substring(6, 8));
+              var date = new Date(y, m - 1, d);
+
+              var day = {
+                dateAsString: res[i].c[0].v, 
+                result: res[i].c[5] != null ? res[i].c[5].v : 0,
+                date: date,
+                isBeforeNow: date.getTime() <= today.getTime(),
+                day: d,
+                month: m,
+                weekdayStr: date.toLocaleString("da", { weekday: "long" }),
+                monthStr: date.toLocaleString("da", { month: "long" }),
+                year: y,
+                row: i + 2 // one to mitigate zero-index and one to mitigate title row
+              };
+
+              day.weekdayStr = day.weekdayStr.charAt(0).toUpperCase() + day.weekdayStr.slice(1);
+
+              if(foundToday === false && day.date.getTime() == today.getTime()){
+                foundToday = true;
+                week.isThisWeek = true;
+              }
+              else if(foundToday === false && day.date.getTime() > today.getTime()){
+                foundToday = true;
+                weeks[weeks.length -1].isThisWeek = true;
+              }
+
+              week.days.push(day);
+              week.year = res[i].c[0].v.substring(0, 4);
+
+              this.days.push(day);
+            }
+          }
+        }
+
+        if(res[i].c[0] == null && res[i].c[5] != null && !isNaN(res[i].c[5].v)){ //Week result
+          this.summary.currentResultMinutes = parseInt(res[i].c[5].v);
+          this.summary.currentResultHours = (this.summary.currentResultMinutes / 60).toFixed(2);
+        }
+      }
+
+      if(week.title)
+        weeks.push(week);
+
+      weeks.sort(function(a, b){return a.year < b.year ? 1 : a.title < b.title ? 1 : -1;});
+
+      this.weeks = weeks;
+    },
+    registerWork: function(minutes, dayShift){
+
+      if(isNaN(dayShift) || isNaN(minutes)){
+        this.$.toastInvalidNumber.show();
+        return;
+      }
+
+      minutes = minutes == "" ? 0 : parseInt(minutes);
+
+      var row = null;
+      var today = new Date();
+      today.setHours(0,0,0,0)
+
+      for(var i = 0; i < this.days.length; i++){
+        var d = new Date(this.days[i].date.getTime());
+
+        var timeDiff = Math.abs(d.getTime() - today.getTime());
+        var diffDays = Math.ceil(timeDiff / (1000 * 3600 * 24)); 
+
+        if(diffDays == - dayShift){
+          row = this.days[i].row;
+          break;
+        }
+      }
+
+      if(row !== null){
+        var t = this;
+        request({module: "integration", type: "sheetsupdate", sheet: "1j9GkwpmQCel4NSoWPZlZkjlDBYJVL0JWuYsf5RCA6mE", row: row, col: 6, value: minutes}, function(d){
+          if(d.success === true){
+              t.$.toastEnterSuccess.show();
+              t.$.ajax.go();
+          } else {
+              t.$.toastEnterUnknownError.show();
+          }
+        });
+      } else {
+        this.$.toastDayNotFound.show();
+      }
+    }
+  });
+  </script>
+</polymer-element>

@@ -1,0 +1,1 @@
+vulcanize -o index.html index_dev.html
