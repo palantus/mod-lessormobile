@@ -26,6 +26,7 @@
     "core-item": "Polymer/core-item#*",
     "core-icon-button": "Polymer/core-icon-button#*",
     "core-toolbar": "Polymer/core-toolbar#*",
-    "paper-toast": "Polymer/paper-toast#*"
+    "paper-toast": "Polymer/paper-toast#*",
+    "core-localstorage": "Polymer/core-localstorage#*"
   }
 }

@@ -2,6 +2,7 @@
 <link rel="import" href="bower_components/paper-button/paper-button.html">
 <link rel="import" href="bower_components/paper-radio-group/paper-radio-group.html">
 <link rel="import" href="bower_components/paper-radio-button/paper-radio-button.html">
+<link rel="import" href="bower_components/core-localstorage/core-localstorage.html">
 <link rel="import" href="summarycard.html">
 <link rel="import" href="service.html">
 
@@ -40,7 +41,11 @@
     
     </style>
     
-    <lessor-service id="service" weeks="{{weeks}}", summary="{{summary}}"></lessor-service>
+    <core-localstorage name="settings_username" value="{{setup.username}}"></core-localstorage>
+    <core-localstorage name="settings_password" value="{{setup.password}}"></core-localstorage>
+    <core-localstorage name="settings_sheet" value="{{setup.sheet}}"></core-localstorage>
+
+    <lessor-service id="service" weeks="{{weeks}}", summary="{{summary}}" sheet="{{setup.sheet}}"></lessor-service>
 
     <template bind="{{ summary }}" if="{{show == 'summary'}}">
       <lessormobile-summarycard>
@@ -90,7 +95,7 @@
         <paper-input id="password" label="Google kodeord" value="{{ password }}" floatinglabel></paper-input>
         <paper-input id="sheet" label="Sheet ID" value="{{ sheet }}" floatinglabel></paper-input>
 
-        <paper-button raisedbutton="" class="colored" label="Gem" role="button" tabindex="0" aria-label="colored" on-click="{{onSaveSetup}}"></paper-button>
+        <!--<paper-button raisedbutton="" class="colored" label="Gem" role="button" tabindex="0" aria-label="colored" on-click="{{onSaveSetup}}"></paper-button>-->
         <content></content>
       </lessormobile-summarycard>
     </template>
@@ -129,7 +134,7 @@
             break;
         }
 
-        this.$.service.registerWork(this.registerInfo.numMinutes, dayOffset);
+        this.$.service.registerWork(this.setup.username, this.setup.password, this.registerInfo.numMinutes, dayOffset);
       },
       onSaveSetup: function(){
       }

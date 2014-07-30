@@ -1,7 +1,7 @@
 <link rel="import" href="bower_components/core-ajax/core-ajax.html">
 <link rel="import" href="bower_components/paper-toast/paper-toast.html">
 
-<polymer-element name="lessor-service" attributes="weeks,summary">
+<polymer-element name="lessor-service" attributes="weeks,summary,sheet">
   <template>
     <style>
     
@@ -9,7 +9,7 @@
 
     <core-ajax id="ajax"
       auto
-      url="/request?module=integration&type=sheetsquery&sheet=1j9GkwpmQCel4NSoWPZlZkjlDBYJVL0JWuYsf5RCA6mE&query=SELECT *"
+      url="/request?module=integration&type=sheetsquery&sheet={{sheet}}&query=SELECT *"
       on-core-response="{{dataLoaded}}"
       handleAs="json">
     </core-ajax>
@@ -24,6 +24,7 @@
     created: function() {
       this.weeks = [];
       this.days = [];
+      this.sheet = "";
     },
     dataLoaded: function() {
       // Make a copy of the loaded data
@@ -106,7 +107,7 @@
 
       this.weeks = weeks;
     },
-    registerWork: function(minutes, dayShift){
+    registerWork: function(username, password, minutes, dayShift){
 
       if(isNaN(dayShift) || isNaN(minutes)){
         this.$.toastInvalidNumber.show();
@@ -133,7 +134,7 @@
 
       if(row !== null){
         var t = this;
-        request({module: "integration", type: "sheetsupdate", sheet: "1j9GkwpmQCel4NSoWPZlZkjlDBYJVL0JWuYsf5RCA6mE", row: row, col: 6, value: minutes}, function(d){
+        request({module: "integration", type: "sheetsupdate", sheet: this.sheet, username: username, password: password, row: row, col: 6, value: minutes}, function(d){
           if(d.success === true){
               t.$.toastEnterSuccess.show();
               t.$.ajax.go();
