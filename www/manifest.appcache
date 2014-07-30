@@ -1,32 +1,32 @@
 CACHE MANIFEST
-#VERSION 007
+#VERSION 008
 
 CACHE:
 /js/jquery.min.js
 /js/framework.js
-/misc/lessormobile/bower_components/platform/platform.js
-/misc/lessormobile/bower_components/platform/platform.js.map
-/misc/lessormobile/bower_components/polymer/polymer.js
-/misc/lessormobile/bower_components/polymer/polymer.js.map
-/misc/lessormobile/main.html
-/misc/lessormobile/contentlist.html
-/misc/lessormobile/index.html
-/misc/lessormobile/service.html
-/misc/lessormobile/summarycard.html
-/misc/lessormobile/img/lessorlogo.png
+/lessormobile/bower_components/platform/platform.js
+/lessormobile/bower_components/platform/platform.js.map
+/lessormobile/bower_components/polymer/polymer.js
+/lessormobile/bower_components/polymer/polymer.js.map
+/lessormobile/main.html
+/lessormobile/contentlist.html
+/lessormobile/index.html
+/lessormobile/service.html
+/lessormobile/summarycard.html
+/lessormobile/img/lessorlogo.png
 
-/misc/lessormobile/bower_components/core-toolbar/core-toolbar.css
-/misc/lessormobile/bower_components/core-drawer-panel/core-drawer-panel.css
-/misc/lessormobile/bower_components/core-header-panel/core-header-panel.css
-/misc/lessormobile/bower_components/core-icon-button/core-icon-button.css
-/misc/lessormobile/bower_components/core-menu/core-submenu.css
-/misc/lessormobile/bower_components/core-input/core-input.css
-/misc/lessormobile/bower_components/paper-input/paper-input.css
-/misc/lessormobile/bower_components/paper-shadow/paper-shadow.css
-/misc/lessormobile/bower_components/paper-button/paper-button.css
-/misc/lessormobile/bower_components/paper-radio-button/paper-radio-button.css
-/misc/lessormobile/bower_components/core-transition/core-transition-overlay.css
-/misc/lessormobile/bower_components/paper-toast/paper-toast.css
+/lessormobile/bower_components/core-toolbar/core-toolbar.css
+/lessormobile/bower_components/core-drawer-panel/core-drawer-panel.css
+/lessormobile/bower_components/core-header-panel/core-header-panel.css
+/lessormobile/bower_components/core-icon-button/core-icon-button.css
+/lessormobile/bower_components/core-menu/core-submenu.css
+/lessormobile/bower_components/core-input/core-input.css
+/lessormobile/bower_components/paper-input/paper-input.css
+/lessormobile/bower_components/paper-shadow/paper-shadow.css
+/lessormobile/bower_components/paper-button/paper-button.css
+/lessormobile/bower_components/paper-radio-button/paper-radio-button.css
+/lessormobile/bower_components/core-transition/core-transition-overlay.css
+/lessormobile/bower_components/paper-toast/paper-toast.css
 
 NETWORK:
 *
