@@ -1,5 +1,5 @@
 <!doctype html>
-<html lang="da" manifest="/lessormobile/manifest.appcache">
+<html lang="da">
 <head>
   <title>LESSOR Mobile</title>
   <meta http-equiv="X-UA-Compatible" content="IE=10,IE=9,IE=8,IE=edge">
@@ -5979,6 +5979,135 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
 </polymer-element>
 
 
+<!--
+Copyright (c) 2014 The Polymer Project Authors. All rights reserved.
+This code may only be used under the BSD style license found at http://polymer.github.io/LICENSE.txt
+The complete set of authors may be found at http://polymer.github.io/AUTHORS.txt
+The complete set of contributors may be found at http://polymer.github.io/CONTRIBUTORS.txt
+Code distributed by Google as part of the polymer project is also
+subject to an additional IP rights grant found at http://polymer.github.io/PATENTS.txt
+-->
+
+<!--
+Element access to localStorage.  The "name" property
+is the key to the data ("value" property) stored in localStorage.
+
+`core-localstorage` automatically saves the value to localStorage when
+value is changed.  Note that if value is an object auto-save will be
+triggered only when value is a different instance.
+
+    <core-localstorage name="my-app-storage" value="{{value}}"></core-localstorage>
+
+@group Polymer Core Elements
+@element core-localstorage
+@blurb Element access to localStorage.
+@url github.io
+@categories Data
+-->
+
+
+
+<polymer-element name="core-localstorage" attributes="name value useRaw autoSaveDisabled" hidden assetpath="bower_components/core-localstorage/">
+<script>
+
+  Polymer('core-localstorage', {
+    
+    /**
+     * Fired when a value is loaded from localStorage.
+     * @event core-localstorage-load
+     */
+     
+    /**
+     * The key to the data stored in localStorage.
+     *
+     * @attribute name
+     * @type string
+     * @default null
+     */
+    name: '',
+    
+    /**
+     * The data associated with the specified name.
+     *
+     * @attribute value
+     * @type object
+     * @default null
+     */
+    value: null,
+    
+    /**
+     * If true, the value is stored and retrieved without JSON processing.
+     *
+     * @attribute useRaw
+     * @type boolean
+     * @default false
+     */
+    useRaw: false,
+    
+    /**
+     * If true, auto save is disabled.
+     *
+     * @attribute autoSaveDisabled
+     * @type boolean
+     * @default false
+     */
+    autoSaveDisabled: false,
+    
+    attached: function() {
+      // wait for bindings are all setup
+      this.async('load');
+    },
+    
+    valueChanged: function() {
+      if (this.loaded && !this.autoSaveDisabled) {
+        this.save();
+      }
+    },
+    
+    load: function() {
+      var v = localStorage.getItem(this.name);
+      if (this.useRaw) {
+        this.value = v;
+      } else {
+        // localStorage has a flaw that makes it difficult to determine
+        // if a key actually exists or not (getItem returns null if the
+        // key doesn't exist, which is not distinguishable from a stored
+        // null value)
+        // however, if not `useRaw`, an (unparsed) null value unambiguously
+        // signals that there is no value in storage (a stored null value would
+        // be escaped, i.e. "null")
+        // in this case we save any non-null current (default) value
+        if (v === null) {
+          if (this.value !== null) {
+            this.save();
+          }
+        } else {
+          try {
+            v = JSON.parse(v);
+          } catch(x) {
+          }
+          this.value = v;
+        }
+      }
+      this.loaded = true;
+      this.asyncFire('core-localstorage-load');
+    },
+    
+    /** 
+     * Saves the value to localStorage.
+     *
+     * @method save
+     */
+    save: function() {
+      var v = this.useRaw ? this.value : JSON.stringify(this.value);
+      localStorage.setItem(this.name, v);
+    }
+    
+  });
+
+</script>
+</polymer-element>
+
 
 
 <polymer-element name="lessormobile-summarycard" assetpath="">
@@ -7764,13 +7893,13 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
 </polymer-element>
 
 
-<polymer-element name="lessor-service" attributes="weeks,summary" assetpath="">
+<polymer-element name="lessor-service" attributes="weeks,summary,sheet" assetpath="">
   <template>
     <style>
     
     </style>
 
-    <core-ajax id="ajax" auto="" url="/request?module=integration&amp;type=sheetsquery&amp;sheet=1j9GkwpmQCel4NSoWPZlZkjlDBYJVL0JWuYsf5RCA6mE&amp;query=SELECT *" on-core-response="{{dataLoaded}}" handleas="json">
+    <core-ajax id="ajax" auto="" url="/request?module=integration&amp;type=sheetsquery&amp;sheet={{sheet}}&amp;query=SELECT *" on-core-response="{{dataLoaded}}" handleas="json">
     </core-ajax>
 
     <paper-toast id="toastInvalidNumber" class="capsule" text="Ugyldig registrering" style="padding-right: 60px;"></paper-toast>
@@ -7783,6 +7912,7 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
     created: function() {
       this.weeks = [];
       this.days = [];
+      this.sheet = "";
     },
     dataLoaded: function() {
       // Make a copy of the loaded data
@@ -7865,7 +7995,7 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
 
       this.weeks = weeks;
     },
-    registerWork: function(minutes, dayShift){
+    registerWork: function(username, password, minutes, dayShift){
 
       if(isNaN(dayShift) || isNaN(minutes)){
         this.$.toastInvalidNumber.show();
@@ -7892,13 +8022,15 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
 
       if(row !== null){
         var t = this;
-        request({module: "integration", type: "sheetsupdate", sheet: "1j9GkwpmQCel4NSoWPZlZkjlDBYJVL0JWuYsf5RCA6mE", row: row, col: 6, value: minutes}, function(d){
+        request({module: "integration", type: "sheetsupdate", sheet: this.sheet, username: username, password: password, row: row, col: 6, value: minutes}, function(d){
           if(d.success === true){
               t.$.toastEnterSuccess.show();
               t.$.ajax.go();
           } else {
               t.$.toastEnterUnknownError.show();
           }
+        }, function(){
+          t.$.toastEnterUnknownError.show();
         });
       } else {
         this.$.toastDayNotFound.show();
@@ -7944,7 +8076,11 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
     
     </style>
     
-    <lessor-service id="service" weeks="{{weeks}}" ,="" summary="{{summary}}"></lessor-service>
+    <core-localstorage name="settings_username" value="{{setup.username}}"></core-localstorage>
+    <core-localstorage name="settings_password" value="{{setup.password}}"></core-localstorage>
+    <core-localstorage name="settings_sheet" value="{{setup.sheet}}"></core-localstorage>
+
+    <lessor-service id="service" weeks="{{weeks}}" ,="" summary="{{summary}}" sheet="{{setup.sheet}}"></lessor-service>
 
     <template bind="{{ summary }}" if="{{show == &apos;summary&apos;}}">
       <lessormobile-summarycard>
@@ -7994,7 +8130,7 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
         <paper-input id="password" label="Google kodeord" value="{{ password }}" floatinglabel=""></paper-input>
         <paper-input id="sheet" label="Sheet ID" value="{{ sheet }}" floatinglabel=""></paper-input>
 
-        <paper-button raisedbutton="" class="colored" label="Gem" role="button" tabindex="0" aria-label="colored" on-click="{{onSaveSetup}}"></paper-button>
+        <!--<paper-button raisedbutton="" class="colored" label="Gem" role="button" tabindex="0" aria-label="colored" on-click="{{onSaveSetup}}"></paper-button>-->
         <content></content>
       </lessormobile-summarycard>
     </template>
@@ -8033,7 +8169,7 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
             break;
         }
 
-        this.$.service.registerWork(this.registerInfo.numMinutes, dayOffset);
+        this.$.service.registerWork(this.setup.username, this.setup.password, this.registerInfo.numMinutes, dayOffset);
       },
       onSaveSetup: function(){
       }
