@@ -6,7 +6,7 @@
   <meta name="viewport" content="width=device-width, minimum-scale=1.0, initial-scale=1.0, user-scalable=yes">
   <meta name="mobile-web-app-capable" content="yes">
   <meta name="apple-mobile-web-app-capable" content="yes">
-  <link rel="shortcut icon" sizes="1024x1024" href="/lessormobile/img/lessorlogo.png">
+  <link rel="shortcut icon" sizes="1024x1024" href="/workovertime/img/lessorlogo.png">
 
 
   <script src="bower_components/platform/platform.js"></script>
@@ -6110,7 +6110,7 @@ triggered only when value is a different instance.
 
 
 
-<polymer-element name="lessormobile-summarycard" assetpath="">
+<polymer-element name="workovertime-summarycard" assetpath="">
   <template>
     <style>
       :host {
@@ -6145,7 +6145,7 @@ triggered only when value is a different instance.
 
   </template>
   <script>
-  Polymer('lessormobile-summarycard', {
+  Polymer('workovertime-summarycard', {
     publish: {
       favorite: {
         value: false,
@@ -7893,7 +7893,7 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
 </polymer-element>
 
 
-<polymer-element name="lessor-service" attributes="weeks,summary,sheet" assetpath="">
+<polymer-element name="workovertime-service" attributes="weeks,summary,sheet" assetpath="">
   <template>
     <style>
     
@@ -7908,7 +7908,7 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
     <paper-toast id="toastDayNotFound" class="capsule" text="Ikke muligt at registrere p&#xE5; denne dag" style="padding-right: 60px;"></paper-toast>
   </template>
   <script>
-  Polymer('lessor-service', {
+  Polymer('workovertime-service', {
     created: function() {
       this.weeks = [];
       this.days = [];
@@ -8041,7 +8041,7 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
 </polymer-element>
 
 
-<polymer-element name="lessormobile-contentlist" attributes="show" assetpath="">
+<polymer-element name="workovertime-contentlist" attributes="show" assetpath="">
   <template>
     <style>
     
@@ -8080,20 +8080,20 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
     <core-localstorage name="settings_password" value="{{setup.password}}"></core-localstorage>
     <core-localstorage name="settings_sheet" value="{{setup.sheet}}"></core-localstorage>
 
-    <lessor-service id="service" weeks="{{weeks}}" ,="" summary="{{summary}}" sheet="{{setup.sheet}}"></lessor-service>
+    <workovertime-service id="service" weeks="{{weeks}}" ,="" summary="{{summary}}" sheet="{{setup.sheet}}"></workovertime-service>
 
     <template bind="{{ summary }}" if="{{show == &apos;summary&apos;}}">
-      <lessormobile-summarycard>
+      <workovertime-summarycard>
         <h2>Opsummering</h2>
         <p>Minutter i overskud: {{currentResultMinutes}}</p>
         <p>Timer i overskud: {{currentResultHours}}</p>
         <content></content>
-      </lessormobile-summarycard>
+      </workovertime-summarycard>
     </template>
 
     <template repeat="{{week in weeks}}" if="{{show == &apos;weeks&apos;}}">
       <template if="{{week.isThisWeek || week.isBeforeThisWeek}}">
-        <lessormobile-summarycard isthisweek?="{{week.isThisWeek}}">
+        <workovertime-summarycard isthisweek?="{{week.isThisWeek}}">
           <h2>{{week.title}} ({{week.year}})</h2>
           <div>
             <template repeat="{{day in week.days}}">
@@ -8102,12 +8102,12 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
               </template>
             </template>
           </div>
-        </lessormobile-summarycard>
+        </workovertime-summarycard>
       </template>
     </template>
 
     <template bind="{{ registerInfo }}" if="{{show == &apos;enterhours&apos;}}">
-      <lessormobile-summarycard>
+      <workovertime-summarycard>
         <h2>Overarbejde</h2>
 
         <paper-input id="numhours" label="Indtast overarbejde i minutter" value="{{ numMinutes }}" floatinglabel="" validate="^-?[0-9]*$" error="Input is not a number!"></paper-input>
@@ -8119,11 +8119,11 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
 
         <paper-button raisedbutton="" class="colored" label="Gem" role="button" tabindex="0" aria-label="colored" on-click="{{onSaveReg}}"></paper-button>
         <content></content>
-      </lessormobile-summarycard>
+      </workovertime-summarycard>
     </template>
 
     <template bind="{{ setup }}" if="{{show == &apos;setup&apos;}}">
-      <lessormobile-summarycard>
+      <workovertime-summarycard>
         <h2>Ops&#xE6;tning</h2>
 
         <paper-input id="username" label="Google brugernavn" value="{{ username }}" floatinglabel=""></paper-input>
@@ -8132,16 +8132,16 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
 
         <!--<paper-button raisedbutton="" class="colored" label="Gem" role="button" tabindex="0" aria-label="colored" on-click="{{onSaveSetup}}"></paper-button>-->
         <content></content>
-      </lessormobile-summarycard>
+      </workovertime-summarycard>
     </template>
 
     <template bind="{{ help }}" if="{{show == &apos;help&apos;}}">
-      <lessormobile-summarycard>
+      <workovertime-summarycard>
         <h2>Hj&#xE6;lp</h2>
         <p>
           Denne app giver dig et overblik over dit overarbejde. Du kan desuden registrere timer direkte herfra. Alle data bliver gemt i et Google sheet som du selv har p&#xE5; din egen Google konto.
         </p>
-      </lessormobile-summarycard>
+      </workovertime-summarycard>
     </template>
 
    
@@ -8150,7 +8150,7 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
   </template>
 
   <script>
-    Polymer('lessormobile-contentlist',{
+    Polymer('workovertime-contentlist',{
       registerInfo: {numMinutes: "", dayselector: "today"},
       setup: {username: "", password: "", sheet: ""},
       help: {},
@@ -8241,8 +8241,8 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
 
     
     <div class="container" layout="" vertical="" center="">
-      <lessormobile-contentlist id="lessorcontentlist">
-      </lessormobile-contentlist>
+      <workovertime-contentlist id="workovertimecontentlist">
+      </workovertime-contentlist>
     </div>
 
     </core-scaffold>
@@ -8253,7 +8253,7 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
     Polymer('my-element', {
       selectAction: function(){
         if(this.item !== undefined){
-          this.$.lessorcontentlist.show = this.item.id;
+          this.$.workovertimecontentlist.show = this.item.id;
           this.$.core_scaffold.closeDrawer();
         }
       }

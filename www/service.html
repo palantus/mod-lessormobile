@@ -1,7 +1,7 @@
 <link rel="import" href="bower_components/core-ajax/core-ajax.html">
 <link rel="import" href="bower_components/paper-toast/paper-toast.html">
 
-<polymer-element name="lessor-service" attributes="weeks,summary,sheet">
+<polymer-element name="workovertime-service" attributes="weeks,summary,sheet">
   <template>
     <style>
     
@@ -20,7 +20,7 @@
     <paper-toast id="toastDayNotFound" class="capsule" text="Ikke muligt at registrere på denne dag" style="padding-right: 60px;"></paper-toast>
   </template>
   <script>
-  Polymer('lessor-service', {
+  Polymer('workovertime-service', {
     created: function() {
       this.weeks = [];
       this.days = [];

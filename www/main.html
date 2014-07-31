@@ -71,8 +71,8 @@
 
     
     <div class="container" layout vertical center>
-      <lessormobile-contentlist id="lessorcontentlist">
-      </lessormobile-contentlist>
+      <workovertime-contentlist id="workovertimecontentlist">
+      </workovertime-contentlist>
     </div>
 
     </core-scaffold>
@@ -83,7 +83,7 @@
     Polymer('my-element', {
       selectAction: function(){
         if(this.item !== undefined){
-          this.$.lessorcontentlist.show = this.item.id;
+          this.$.workovertimecontentlist.show = this.item.id;
           this.$.core_scaffold.closeDrawer();
         }
       }

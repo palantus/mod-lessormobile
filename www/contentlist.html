@@ -6,7 +6,7 @@
 <link rel="import" href="summarycard.html">
 <link rel="import" href="service.html">
 
-<polymer-element name="lessormobile-contentlist" attributes="show">
+<polymer-element name="workovertime-contentlist" attributes="show">
   <template>
     <style>
     
@@ -45,20 +45,20 @@
     <core-localstorage name="settings_password" value="{{setup.password}}"></core-localstorage>
     <core-localstorage name="settings_sheet" value="{{setup.sheet}}"></core-localstorage>
 
-    <lessor-service id="service" weeks="{{weeks}}", summary="{{summary}}" sheet="{{setup.sheet}}"></lessor-service>
+    <workovertime-service id="service" weeks="{{weeks}}", summary="{{summary}}" sheet="{{setup.sheet}}"></workovertime-service>
 
     <template bind="{{ summary }}" if="{{show == 'summary'}}">
-      <lessormobile-summarycard>
+      <workovertime-summarycard>
         <h2>Opsummering</h2>
         <p>Minutter i overskud: {{currentResultMinutes}}</p>
         <p>Timer i overskud: {{currentResultHours}}</p>
         <content></content>
-      </lessormobile-summarycard>
+      </workovertime-summarycard>
     </template>
 
     <template repeat="{{week in weeks}}" if="{{show == 'weeks'}}">
       <template if="{{week.isThisWeek || week.isBeforeThisWeek}}">
-        <lessormobile-summarycard isThisWeek?={{week.isThisWeek}}>
+        <workovertime-summarycard isThisWeek?={{week.isThisWeek}}>
           <h2>{{week.title}} ({{week.year}})</h2>
           <div>
             <template repeat="{{day in week.days}}">
@@ -67,12 +67,12 @@
               </template>
             </template>
           </div>
-        </lessormobile-summarycard>
+        </workovertime-summarycard>
       </template>
     </template>
 
     <template bind="{{ registerInfo }}" if="{{show == 'enterhours'}}">
-      <lessormobile-summarycard>
+      <workovertime-summarycard>
         <h2>Overarbejde</h2>
 
         <paper-input id="numhours" label="Indtast overarbejde i minutter" value="{{ numMinutes }}" floatinglabel validate="^-?[0-9]*$" error="Input is not a number!"></paper-input>
@@ -84,11 +84,11 @@
 
         <paper-button raisedbutton="" class="colored" label="Gem" role="button" tabindex="0" aria-label="colored" on-click="{{onSaveReg}}"></paper-button>
         <content></content>
-      </lessormobile-summarycard>
+      </workovertime-summarycard>
     </template>
 
     <template bind="{{ setup }}" if="{{show == 'setup'}}">
-      <lessormobile-summarycard>
+      <workovertime-summarycard>
         <h2>Opsætning</h2>
 
         <paper-input id="username" label="Google brugernavn" value="{{ username }}" floatinglabel></paper-input>
@@ -97,16 +97,16 @@
 
         <!--<paper-button raisedbutton="" class="colored" label="Gem" role="button" tabindex="0" aria-label="colored" on-click="{{onSaveSetup}}"></paper-button>-->
         <content></content>
-      </lessormobile-summarycard>
+      </workovertime-summarycard>
     </template>
 
     <template bind="{{ help }}" if="{{show == 'help'}}">
-      <lessormobile-summarycard>
+      <workovertime-summarycard>
         <h2>Hjælp</h2>
         <p>
           Denne app giver dig et overblik over dit overarbejde. Du kan desuden registrere timer direkte herfra. Alle data bliver gemt i et Google sheet som du selv har på din egen Google konto.
         </p>
-      </lessormobile-summarycard>
+      </workovertime-summarycard>
     </template>
 
    
