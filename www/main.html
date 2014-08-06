@@ -59,7 +59,7 @@
     <core-scaffold id="core_scaffold">
       <core-header-panel mode="seamed" id="core_header_panel" navigation flex>
         <core-toolbar id="core_toolbar"></core-toolbar>
-        <core-menu valueattr="label" id="core_menu" theme="core-light-theme" selected="0" on-core-select="{{selectAction}}" selectedItem="{{item}}">
+        <core-menu id="core_menu" theme="core-light-theme" selected="{{selectedIndex}}" on-core-select="{{selectAction}}" selectedItem="{{item}}">
           <core-item label="Opsummering" icon="account-circle" id="summary" horizontal center layout></core-item>
           <core-item label="Uger" icon="history" id="weeks" horizontal center layout></core-item>
           <core-item label="Registrer" icon="add-circle" id="enterhours" horizontal center layout></core-item>
@@ -83,7 +83,7 @@
     Polymer('my-element', {
       selectAction: function(){
         if(this.item !== undefined){
-          this.$.workovertimecontentlist.show = this.item.id;
+          this.$.workovertimecontentlist.show = this.selectedIndex;
           this.$.core_scaffold.closeDrawer();
         }
       }

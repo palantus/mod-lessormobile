@@ -3,6 +3,8 @@
 <link rel="import" href="bower_components/paper-radio-group/paper-radio-group.html">
 <link rel="import" href="bower_components/paper-radio-button/paper-radio-button.html">
 <link rel="import" href="bower_components/core-localstorage/core-localstorage.html">
+<link rel="import" href="bower_components/core-animated-pages/core-animated-pages.html">
+<link rel="import" href="bower_components/core-animated-pages/transitions/cross-fade.html">
 <link rel="import" href="summarycard.html">
 <link rel="import" href="service.html">
 
@@ -47,67 +49,80 @@
 
     <workovertime-service id="service" weeks="{{weeks}}", summary="{{summary}}" sheet="{{setup.sheet}}"></workovertime-service>
 
-    <template bind="{{ summary }}" if="{{show == 'summary'}}">
-      <workovertime-summarycard>
-        <h2>Opsummering</h2>
-        <p>Minutter i overskud: {{currentResultMinutes}}</p>
-        <p>Timer i overskud: {{currentResultHours}}</p>
-        <content></content>
-      </workovertime-summarycard>
-    </template>
+    <core-animated-pages transitions="cross-fade-all" selected="{{show}}">
 
-    <template repeat="{{week in weeks}}" if="{{show == 'weeks'}}">
-      <template if="{{week.isThisWeek || week.isBeforeThisWeek}}">
-        <workovertime-summarycard isThisWeek?={{week.isThisWeek}}>
-          <h2>{{week.title}} ({{week.year}})</h2>
-          <div>
-            <template repeat="{{day in week.days}}">
-              <template if="{{day.isBeforeNow}}">
-                <div class="weekday"><span>{{day.weekdayStr}}: </span><span>{{day.result}}</span></div>
+      <section>
+        <template bind="{{ summary }}">
+          <workovertime-summarycard cross-fade>
+            <h2>Opsummering</h2>
+            <p>Minutter i overskud: {{currentResultMinutes}}</p>
+            <p>Timer i overskud: {{currentResultHours}}</p>
+            <content></content>
+          </workovertime-summarycard>
+        </template>
+      </section>
+
+      <section>
+      <template repeat="{{week in weeks}}">
+        <template if="{{week.isThisWeek || week.isBeforeThisWeek}}">
+          <workovertime-summarycard isThisWeek?={{week.isThisWeek}}>
+            <h2>{{week.title}} ({{week.year}})</h2>
+            <div>
+              <template repeat="{{day in week.days}}">
+                <template if="{{day.isBeforeNow}}">
+                  <div class="weekday"><span>{{day.weekdayStr}}: </span><span>{{day.result}}</span></div>
+                </template>
               </template>
-            </template>
-          </div>
+            </div>
+          </workovertime-summarycard>
+        </template>
+      </template>
+      </section>
+
+      <section>
+      <template bind="{{ registerInfo }}">
+        <workovertime-summarycard>
+          <h2>Overarbejde</h2>
+
+          <paper-input id="numhours" label="Indtast overarbejde i minutter" value="{{ numMinutes }}" floatinglabel validate="^-?[0-9]*$" error="Input is not a number!"></paper-input>
+
+          <paper-radio-group role="radiogroup" valueattr="id" selected="{{dayselector}}">
+            <paper-radio-button id="yesterday" label="I går" role="radio" tabindex="0" aria-checked="false" aria-label="I går" class=""></paper-radio-button><br>
+            <paper-radio-button id="today" label="I dag" role="radio" tabindex="1" aria-checked="true" aria-label="I dag" class="core-selected"=""></paper-radio-button><br>
+          </paper-radio-group><br>
+
+          <paper-button raisedbutton="" class="colored" label="Gem" role="button" tabindex="0" aria-label="colored" on-click="{{onSaveReg}}"></paper-button>
+          <content></content>
         </workovertime-summarycard>
       </template>
-    </template>
+      </section>
 
-    <template bind="{{ registerInfo }}" if="{{show == 'enterhours'}}">
-      <workovertime-summarycard>
-        <h2>Overarbejde</h2>
+      <section>
+      <template bind="{{ setup }}">
+        <workovertime-summarycard>
+          <h2>Opsætning</h2>
 
-        <paper-input id="numhours" label="Indtast overarbejde i minutter" value="{{ numMinutes }}" floatinglabel validate="^-?[0-9]*$" error="Input is not a number!"></paper-input>
+          <paper-input id="username" label="Google brugernavn" value="{{ username }}" floatinglabel></paper-input>
+          <paper-input id="password" type="password" label="Google kodeord" value="{{ password }}" floatinglabel></paper-input>
+          <paper-input id="sheet" label="Sheet ID" value="{{ sheet }}" floatinglabel></paper-input>
 
-        <paper-radio-group role="radiogroup" valueattr="id" selected="{{dayselector}}">
-          <paper-radio-button id="yesterday" label="I går" role="radio" tabindex="0" aria-checked="false" aria-label="I går" class=""></paper-radio-button><br>
-          <paper-radio-button id="today" label="I dag" role="radio" tabindex="1" aria-checked="true" aria-label="I dag" class="core-selected"=""></paper-radio-button><br>
-        </paper-radio-group><br>
+          <!--<paper-button raisedbutton="" class="colored" label="Gem" role="button" tabindex="0" aria-label="colored" on-click="{{onSaveSetup}}"></paper-button>-->
+          <content></content>
+        </workovertime-summarycard>
+      </template>
+      </section>
 
-        <paper-button raisedbutton="" class="colored" label="Gem" role="button" tabindex="0" aria-label="colored" on-click="{{onSaveReg}}"></paper-button>
-        <content></content>
-      </workovertime-summarycard>
-    </template>
-
-    <template bind="{{ setup }}" if="{{show == 'setup'}}">
-      <workovertime-summarycard>
-        <h2>Opsætning</h2>
-
-        <paper-input id="username" label="Google brugernavn" value="{{ username }}" floatinglabel></paper-input>
-        <paper-input id="password" type="password" label="Google kodeord" value="{{ password }}" floatinglabel></paper-input>
-        <paper-input id="sheet" label="Sheet ID" value="{{ sheet }}" floatinglabel></paper-input>
-
-        <!--<paper-button raisedbutton="" class="colored" label="Gem" role="button" tabindex="0" aria-label="colored" on-click="{{onSaveSetup}}"></paper-button>-->
-        <content></content>
-      </workovertime-summarycard>
-    </template>
-
-    <template bind="{{ help }}" if="{{show == 'help'}}">
-      <workovertime-summarycard>
-        <h2>Hjælp</h2>
-        <p>
-          Denne app giver dig et overblik over dit overarbejde. Du kan desuden registrere timer direkte herfra. Alle data bliver gemt i et Google sheet som du selv har på din egen Google konto.
-        </p>
-      </workovertime-summarycard>
-    </template>
+      <section>
+      <template bind="{{ help }}">
+        <workovertime-summarycard>
+          <h2>Hjælp</h2>
+          <p>
+            Denne app giver dig et overblik over dit overarbejde. Du kan desuden registrere timer direkte herfra. Alle data bliver gemt i et Google sheet som du selv har på din egen Google konto.
+          </p>
+        </workovertime-summarycard>
+      </template>
+      </section>
+    </core-animated-pages>
 
    
     <content></content>
@@ -116,6 +131,7 @@
 
   <script>
     Polymer({
+      show: 0,
       registerInfo: {numMinutes: "", dayselector: "today"},
       setup: {username: "", password: "", sheet: ""},
       help: {},

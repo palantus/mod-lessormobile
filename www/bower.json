@@ -20,13 +20,16 @@
     "paper-button": "Polymer/paper-button#*",
     "paper-radio-group": "Polymer/paper-radio-group#*",
     "paper-radio-button": "Polymer/paper-radio-button#*",
+    "paper-toast": "Polymer/paper-toast#*",
+    "paper-shadow": "Polymer/paper-shadow#*",
     "core-scaffold": "Polymer/core-scaffold#*",
     "core-header-panel": "Polymer/core-header-panel#*",
     "core-menu": "Polymer/core-menu#*",
     "core-item": "Polymer/core-item#*",
     "core-icon-button": "Polymer/core-icon-button#*",
     "core-toolbar": "Polymer/core-toolbar#*",
-    "paper-toast": "Polymer/paper-toast#*",
-    "core-localstorage": "Polymer/core-localstorage#*"
+    "core-localstorage": "Polymer/core-localstorage#*",
+    "core-animated-pages": "Polymer/core-animated-pages#*",
+    "core-style": "Polymer/core-style#*"
   }
 }
