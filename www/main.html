@@ -52,7 +52,7 @@
       }
       @media (min-width: 481px) {
         .container {
-          width: 400px;
+          width: 420px;
         }
       }
     </style>
@@ -81,6 +81,7 @@
   <script>
 
     Polymer('my-element', {
+      selectedIndex: 0,
       selectAction: function(){
         if(this.item !== undefined){
           this.$.workovertimecontentlist.show = this.selectedIndex;

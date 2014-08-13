@@ -4,7 +4,8 @@
 <link rel="import" href="bower_components/paper-radio-button/paper-radio-button.html">
 <link rel="import" href="bower_components/core-localstorage/core-localstorage.html">
 <link rel="import" href="bower_components/core-animated-pages/core-animated-pages.html">
-<link rel="import" href="bower_components/core-animated-pages/transitions/cross-fade.html">
+<link rel="import" href="bower_components/core-animated-pages/transitions/slide-up.html">
+<link rel="import" href="bower_components/core-animated-pages/transitions/slide-from-right.html">
 <link rel="import" href="summarycard.html">
 <link rel="import" href="service.html">
 
@@ -49,7 +50,7 @@
 
     <workovertime-service id="service" weeks="{{weeks}}", summary="{{summary}}" sheet="{{setup.sheet}}"></workovertime-service>
 
-    <core-animated-pages transitions="cross-fade-all" selected="{{show}}">
+    <core-animated-pages transitions="" selected="{{show}}">
 
       <section>
         <template bind="{{ summary }}">
@@ -104,8 +105,7 @@
 
           <paper-input id="username" label="Google brugernavn" value="{{ username }}" floatinglabel></paper-input>
           <paper-input id="password" type="password" label="Google kodeord" value="{{ password }}" floatinglabel></paper-input>
-          <paper-input id="sheet" label="Sheet ID" value="{{ sheet }}" floatinglabel></paper-input>
-
+          <paper-input multiline rows="1" id="sheet" label="Sheet ID" value="{{ sheet }}" floatinglabel></paper-input>
           <!--<paper-button raisedbutton="" class="colored" label="Gem" role="button" tabindex="0" aria-label="colored" on-click="{{onSaveSetup}}"></paper-button>-->
           <content></content>
         </workovertime-summarycard>
